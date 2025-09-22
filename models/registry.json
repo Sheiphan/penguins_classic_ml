@@ -3,7 +3,7 @@
     "randomforestclassifier": {
       "model_id": "randomforestclassifier",
       "filename": "randomforestclassifier.pkl",
-      "created": "2025-09-22T20:34:05.959149",
+      "created": "2025-09-22T23:50:22.446024",
       "model_type": "Pipeline",
       "file_size": 250924,
       "pipeline_steps": [
@@ -35,6 +35,6 @@
   },
   "metadata": {
     "created": "2025-09-22T17:36:43.310710",
-    "last_updated": "2025-09-22T20:34:05.959170"
+    "last_updated": "2025-09-22T23:50:22.446053"
   }
 }

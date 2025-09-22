@@ -132,12 +132,6 @@ dmypy.json
 
 # Project specific
 !models/.gitkeep
-data/raw/*
-!data/raw/.gitkeep
-data/interim/*
-!data/interim/.gitkeep
-data/processed/*
-!data/processed/.gitkeep
 logs/
 *.pkl
 *.joblib

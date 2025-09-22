@@ -5,7 +5,7 @@ from typing import Any
 
 import yaml
 from pydantic import BaseModel, Field, field_validator
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class PathConfig(BaseModel):
@@ -17,6 +17,9 @@ class PathConfig(BaseModel):
     processed_dir: str = "data/processed"
     model_dir: str = "models"
     metrics_dir: str = "models/metrics"
+
+    # Pydantic v2: ignore any unknown extras gracefully
+    model_config = {"extra": "ignore"}
 
     @field_validator("*", mode="before")
     @classmethod
@@ -35,6 +38,8 @@ class TuneConfig(BaseModel):
     scoring: str = "accuracy"
     n_jobs: int = -1
 
+    model_config = {"extra": "ignore"}
+
 
 class ModelConfig(BaseModel):
     """Configuration for model training."""
@@ -42,6 +47,8 @@ class ModelConfig(BaseModel):
     name: str = "RandomForestClassifier"
     params: dict[str, Any] = Field(default_factory=dict)
     tune: TuneConfig | None = None
+
+    model_config = {"extra": "ignore"}
 
 
 class FeatureConfig(BaseModel):
@@ -61,6 +68,8 @@ class FeatureConfig(BaseModel):
     test_size: float = 0.2
     stratify: bool = True
 
+    model_config = {"extra": "ignore"}
+
 
 class ExperimentConfig(BaseSettings):
     """Main experiment configuration."""
@@ -70,9 +79,12 @@ class ExperimentConfig(BaseSettings):
     features: FeatureConfig = Field(default_factory=FeatureConfig)
     model: ModelConfig = Field(default_factory=ModelConfig)
 
-    class Config:
-        env_file = ".env"
-        env_nested_delimiter = "__"
+    # Pydantic v2 settings config
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_nested_delimiter="__",
+        extra="ignore",
+    )
 
 
 class APIConfig(BaseSettings):
@@ -83,8 +95,7 @@ class APIConfig(BaseSettings):
     reload: bool = Field(default=False, description="Enable reload")
     workers: int = Field(default=1, description="Number of workers")
 
-    class Config:
-        env_file = ".env"
+    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
 
 class LoggingConfig(BaseSettings):
@@ -98,8 +109,7 @@ class LoggingConfig(BaseSettings):
     retention: str = "30 days"
     log_file: str | None = "logs/app.log"
 
-    class Config:
-        env_file = ".env"
+    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
 
 class ServingConfig(BaseSettings):
@@ -109,9 +119,11 @@ class ServingConfig(BaseSettings):
     logging: LoggingConfig = Field(default_factory=LoggingConfig)
     model_path: str = "models/latest"
 
-    class Config:
-        env_file = ".env"
-        env_nested_delimiter = "__"
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_nested_delimiter="__",
+        extra="ignore",
+    )
 
 
 def load_config(config_path: str, config_class=ExperimentConfig):
@@ -137,4 +149,4 @@ def save_config(config: BaseModel, config_path: str):
     config_file.parent.mkdir(parents=True, exist_ok=True)
 
     with open(config_file, "w") as f:
-        yaml.dump(config.dict(), f, default_flow_style=False, indent=2)
+        yaml.dump(config.model_dump(), f, default_flow_style=False, indent=2)

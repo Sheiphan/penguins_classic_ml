@@ -46,8 +46,6 @@ uv run pre-commit install
 # Run initial code quality checks
 echo "Running initial code quality checks..."
 uv run ruff check src/ tests/ --fix || true
-uv run black src/ tests/
-uv run isort src/ tests/
 
 echo "Development environment setup complete!"
 echo ""
