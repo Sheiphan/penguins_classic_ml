@@ -5,6 +5,7 @@ from unittest.mock import patch
 
 import numpy as np
 import pytest
+from fastapi import HTTPException
 from fastapi.testclient import TestClient
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.pipeline import Pipeline
@@ -146,7 +147,7 @@ class TestPenguinPredictor:
             year=2007,
         )
 
-        with pytest.raises(Exception):  # HTTPException
+        with pytest.raises(HTTPException):
             predictor.validate_input(request)
 
     def test_validate_input_invalid_sex(
@@ -164,7 +165,7 @@ class TestPenguinPredictor:
             year=2007,
         )
 
-        with pytest.raises(Exception):  # HTTPException
+        with pytest.raises(HTTPException):
             predictor.validate_input(request)
 
     def test_validate_input_invalid_ranges(
@@ -184,7 +185,7 @@ class TestPenguinPredictor:
             year=2007,
         )
 
-        with pytest.raises(Exception):  # HTTPException
+        with pytest.raises(HTTPException):
             predictor.validate_input(request)
 
     @patch.object(PenguinPredictor, "predict")
@@ -232,7 +233,7 @@ class TestPenguinPredictor:
             year=2007,
         )
 
-        with pytest.raises(Exception):  # HTTPException
+        with pytest.raises(HTTPException):
             predictor.predict(request)
 
     def test_get_health_with_model(self, temp_model_dir, model_registry_with_model):
@@ -268,7 +269,7 @@ class TestPenguinPredictor:
         """Test getting model info with no model."""
         predictor = PenguinPredictor(temp_model_dir)
 
-        with pytest.raises(Exception):  # HTTPException
+        with pytest.raises(HTTPException):
             predictor.get_model_info()
 
 

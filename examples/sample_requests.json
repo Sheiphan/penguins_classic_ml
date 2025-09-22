@@ -1,0 +1,138 @@
+{
+  "single_predictions": {
+    "adelie_male_torgersen": {
+      "island": "Torgersen",
+      "bill_length_mm": 39.1,
+      "bill_depth_mm": 18.7,
+      "flipper_length_mm": 181.0,
+      "body_mass_g": 3750.0,
+      "sex": "MALE",
+      "year": 2007
+    },
+    "adelie_female_torgersen": {
+      "island": "Torgersen",
+      "bill_length_mm": 36.7,
+      "bill_depth_mm": 19.3,
+      "flipper_length_mm": 193.0,
+      "body_mass_g": 3450.0,
+      "sex": "FEMALE",
+      "year": 2007
+    },
+    "chinstrap_male_dream": {
+      "island": "Dream",
+      "bill_length_mm": 46.5,
+      "bill_depth_mm": 17.9,
+      "flipper_length_mm": 192.0,
+      "body_mass_g": 3500.0,
+      "sex": "MALE",
+      "year": 2008
+    },
+    "chinstrap_female_dream": {
+      "island": "Dream",
+      "bill_length_mm": 45.4,
+      "bill_depth_mm": 18.7,
+      "flipper_length_mm": 188.0,
+      "body_mass_g": 3525.0,
+      "sex": "FEMALE",
+      "year": 2008
+    },
+    "gentoo_male_biscoe": {
+      "island": "Biscoe",
+      "bill_length_mm": 48.6,
+      "bill_depth_mm": 16.0,
+      "flipper_length_mm": 230.0,
+      "body_mass_g": 5800.0,
+      "sex": "MALE",
+      "year": 2009
+    },
+    "gentoo_female_biscoe": {
+      "island": "Biscoe",
+      "bill_length_mm": 45.2,
+      "bill_depth_mm": 15.8,
+      "flipper_length_mm": 215.0,
+      "body_mass_g": 4800.0,
+      "sex": "FEMALE",
+      "year": 2009
+    }
+  },
+  "batch_prediction": {
+    "instances": [
+      {
+        "island": "Torgersen",
+        "bill_length_mm": 39.1,
+        "bill_depth_mm": 18.7,
+        "flipper_length_mm": 181.0,
+        "body_mass_g": 3750.0,
+        "sex": "MALE",
+        "year": 2007
+      },
+      {
+        "island": "Dream",
+        "bill_length_mm": 46.5,
+        "bill_depth_mm": 17.9,
+        "flipper_length_mm": 192.0,
+        "body_mass_g": 3500.0,
+        "sex": "FEMALE",
+        "year": 2008
+      },
+      {
+        "island": "Biscoe",
+        "bill_length_mm": 48.6,
+        "bill_depth_mm": 16.0,
+        "flipper_length_mm": 230.0,
+        "body_mass_g": 5800.0,
+        "sex": "MALE",
+        "year": 2009
+      }
+    ]
+  },
+  "edge_cases": {
+    "minimum_values": {
+      "island": "Torgersen",
+      "bill_length_mm": 30.0,
+      "bill_depth_mm": 13.0,
+      "flipper_length_mm": 170.0,
+      "body_mass_g": 2700.0,
+      "sex": "FEMALE",
+      "year": 2007
+    },
+    "maximum_values": {
+      "island": "Biscoe",
+      "bill_length_mm": 60.0,
+      "bill_depth_mm": 22.0,
+      "flipper_length_mm": 235.0,
+      "body_mass_g": 6300.0,
+      "sex": "MALE",
+      "year": 2009
+    }
+  },
+  "invalid_examples": {
+    "invalid_island": {
+      "island": "InvalidIsland",
+      "bill_length_mm": 45.2,
+      "bill_depth_mm": 15.8,
+      "flipper_length_mm": 215.0,
+      "body_mass_g": 4800.0,
+      "sex": "FEMALE",
+      "year": 2008
+    },
+    "negative_bill_length": {
+      "island": "Biscoe",
+      "bill_length_mm": -5.0,
+      "bill_depth_mm": 15.8,
+      "flipper_length_mm": 215.0,
+      "body_mass_g": 4800.0,
+      "sex": "FEMALE",
+      "year": 2008
+    },
+    "invalid_sex": {
+      "island": "Dream",
+      "bill_length_mm": 46.5,
+      "bill_depth_mm": 17.9,
+      "flipper_length_mm": 192.0,
+      "body_mass_g": 3500.0,
+      "sex": "UNKNOWN",
+      "year": 2008
+    }
+  }
+}

@@ -1,0 +1,154 @@
+# Custom Experiment Configuration Example
+# This file demonstrates how to customize the ML training pipeline
+# Copy this file to configs/ directory and modify as needed
+
+# Random seed for reproducibility
+seed: 42
+
+# Path configuration
+paths:
+  raw: "data/raw/penguins_lter.csv"
+  interim: "data/interim"
+  processed: "data/processed"
+  processed_dir: "data/processed"
+  model_dir: "models"
+  metrics_dir: "models/metrics"
+
+# Feature configuration
+features:
+  # Numeric features to include in the model
+  numeric_features:
+    - "bill_length_mm"
+    - "bill_depth_mm"
+    - "flipper_length_mm"
+    - "body_mass_g"
+    - "year"
+  
+  # Categorical features to include in the model
+  categorical_features:
+    - "island"
+    - "sex"
+  
+  # Target variable for classification
+  target: "species"
+  
+  # Train/test split configuration
+  test_size: 0.2
+  stratify: true
+
+# Model configuration
+model:
+  # Model type - choose from:
+  # - RandomForestClassifier
+  # - LogisticRegression
+  # - DecisionTreeClassifier
+  # - SVC
+  name: "RandomForestClassifier"
+  
+  # Model hyperparameters
+  params:
+    n_estimators: 100
+    max_depth: 10
+    min_samples_split: 2
+    min_samples_leaf: 1
+    random_state: 42
+    n_jobs: -1
+  
+  # Hyperparameter tuning configuration (optional)
+  tune:
+    # Parameter grid for grid search
+    grid:
+      - n_estimators: [50, 100, 200]
+        max_depth: [5, 10, 15, null]
+        min_samples_split: [2, 5, 10]
+        min_samples_leaf: [1, 2, 4]
+    
+    # Cross-validation settings
+    cv: 5
+    scoring: "f1_macro"
+    n_jobs: -1
+
+---
+# Alternative configuration examples
+
+# Example 1: Logistic Regression with tuning
+logistic_regression_example:
+  seed: 42
+  model:
+    name: "LogisticRegression"
+    params:
+      random_state: 42
+      max_iter: 1000
+      solver: "liblinear"
+    tune:
+      grid:
+        - C: [0.1, 1.0, 10.0, 100.0]
+          penalty: ["l1", "l2"]
+          solver: ["liblinear"]
+      cv: 5
+      scoring: "accuracy"
+
+# Example 2: Support Vector Machine
+svm_example:
+  seed: 42
+  model:
+    name: "SVC"
+    params:
+      random_state: 42
+      probability: true  # Enable probability estimates
+    tune:
+      grid:
+        - C: [0.1, 1, 10, 100]
+          kernel: ["linear", "rbf", "poly"]
+          gamma: ["scale", "auto"]
+      cv: 3  # Reduced CV for faster training
+      scoring: "f1_macro"
+
+# Example 3: Decision Tree with minimal tuning
+decision_tree_example:
+  seed: 42
+  model:
+    name: "DecisionTreeClassifier"
+    params:
+      random_state: 42
+      criterion: "gini"
+    tune:
+      grid:
+        - max_depth: [3, 5, 7, 10]
+          min_samples_split: [2, 5, 10]
+          min_samples_leaf: [1, 2, 4]
+      cv: 5
+      scoring: "accuracy"
+
+# Example 4: Custom feature selection
+custom_features_example:
+  seed: 42
+  features:
+    # Only use physical measurements, exclude year and sex
+    numeric_features:
+      - "bill_length_mm"
+      - "bill_depth_mm"
+      - "flipper_length_mm"
+      - "body_mass_g"
+    categorical_features:
+      - "island"
+    target: "species"
+    test_size: 0.25  # Larger test set
+    stratify: true
+  model:
+    name: "RandomForestClassifier"
+    params:
+      n_estimators: 200
+      max_depth: 15
+      random_state: 42
+
+# Example 5: Quick training (no tuning)
+quick_training_example:
+  seed: 42
+  model:
+    name: "RandomForestClassifier"
+    params:
+      n_estimators: 50
+      max_depth: 5
+      random_state: 42
+    # No tune section = no hyperparameter tuning

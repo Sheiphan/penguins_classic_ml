@@ -640,7 +640,7 @@ class TestRealDatasetIntegration:
             config.paths.metrics_dir = str(models_dir / "metrics")
 
             trainer = ModelTrainer(config)
-            results = trainer.train(save_model=True)
+            trainer.train(save_model=True)
 
             # Test serving with trained model
             from src.serving.app import PenguinPredictor
@@ -773,7 +773,7 @@ class TestRealDatasetIntegration:
 
             print("Complete MLOps pipeline test passed!")
             print(f"Model accuracy: {training_results['test_metrics']['accuracy']:.3f}")
-            print(f"Average prediction latency: {avg_latency*1000:.1f}ms")
+            print(f"Average prediction latency: {avg_latency * 1000:.1f}ms")
 
 
 @pytest.mark.integration

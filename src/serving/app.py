@@ -188,7 +188,7 @@ class PenguinPredictor:
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=f"Prediction failed: {str(e)}",
-            )
+            ) from e
 
     def predict_batch(self, request: BatchPredictRequest) -> BatchPredictResponse:
         """Make predictions for multiple penguins.

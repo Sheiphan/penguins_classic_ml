@@ -70,7 +70,7 @@ class TestModelRegistry:
         """Test that initialization creates necessary directories."""
         with tempfile.TemporaryDirectory() as temp_dir:
             registry_path = Path(temp_dir) / "models"
-            registry = ModelRegistry(str(registry_path))
+            ModelRegistry(str(registry_path))
 
             assert registry_path.exists()
             assert (registry_path / "artifacts").exists()
@@ -102,7 +102,7 @@ class TestModelRegistry:
         with tempfile.TemporaryDirectory() as temp_dir:
             registry = ModelRegistry(temp_dir)
 
-            model_path = registry.save_model(sample_pipeline, "test_pipeline")
+            registry.save_model(sample_pipeline, "test_pipeline")
 
             # Check registry entry
             model_info = registry._registry["models"]["test_pipeline"]
