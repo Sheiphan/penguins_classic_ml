@@ -78,10 +78,10 @@ class ExperimentConfig(BaseSettings):
 class APIConfig(BaseSettings):
     """Configuration for API serving."""
 
-    host: str = Field(default="0.0.0.0", env="API_HOST")
-    port: int = Field(default=8000, env="API_PORT")
-    reload: bool = Field(default=False, env="RELOAD")
-    workers: int = Field(default=1, env="API_WORKERS")
+    host: str = Field(default="0.0.0.0", description="API host")
+    port: int = Field(default=8000, description="API port")
+    reload: bool = Field(default=False, description="Enable reload")
+    workers: int = Field(default=1, description="Number of workers")
 
     class Config:
         env_file = ".env"
@@ -90,7 +90,7 @@ class APIConfig(BaseSettings):
 class LoggingConfig(BaseSettings):
     """Configuration for logging."""
 
-    level: str = Field(default="INFO", env="LOG_LEVEL")
+    level: str = Field(default="INFO", description="Log level")
     format: str = (
         "{time:YYYY-MM-DD HH:mm:ss} | {level} | {name}:{function}:{line} | {message}"
     )

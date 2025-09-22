@@ -1,5 +1,7 @@
 """Preprocessing pipeline for the penguins dataset using sklearn."""
 
+from typing import Any
+
 import pandas as pd
 from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
@@ -94,7 +96,7 @@ class PenguinPreprocessor:
             Self for method chaining
         """
         if self._preprocessor is None:
-            self.build_preprocessor()
+            self._preprocessor = self.build_preprocessor()
 
         self._preprocessor.fit(X)
         self._extract_feature_names(X)
@@ -255,7 +257,7 @@ def get_preprocessing_info(preprocessor: PenguinPreprocessor) -> dict:
     if preprocessor.get_preprocessor() is None:
         return {"status": "not_fitted"}
 
-    info = {
+    info: dict[str, Any] = {
         "status": "fitted",
         "numeric_features": NUMERIC_FEATURES,
         "categorical_features": CATEGORICAL_FEATURES,
@@ -265,6 +267,8 @@ def get_preprocessing_info(preprocessor: PenguinPreprocessor) -> dict:
 
     # Get information about each transformer
     sklearn_preprocessor = preprocessor.get_preprocessor()
+    if sklearn_preprocessor is None:
+        return info
 
     # Numeric transformer info
     numeric_transformer = sklearn_preprocessor.named_transformers_["numeric"]

@@ -1,5 +1,7 @@
 """Data schema definitions for the penguins dataset."""
 
+from typing import Any
+
 import pandas as pd
 from pydantic import BaseModel, Field, field_validator
 
@@ -102,7 +104,7 @@ class PenguinDataset(BaseModel):
         """Create PenguinDataset from pandas DataFrame."""
         records = []
         for _, row in df.iterrows():
-            record_data = {}
+            record_data: dict[str, Any] = {}
             for feature in ALL_FEATURES + [TARGET]:
                 if feature in row.index:
                     value = row[feature]
