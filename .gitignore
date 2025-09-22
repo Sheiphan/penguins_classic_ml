@@ -131,7 +131,6 @@ dmypy.json
 .pyre/
 
 # Project specific
-models/
 !models/.gitkeep
 data/raw/*
 !data/raw/.gitkeep

@@ -1,0 +1,283 @@
+{
+  "model_id": "randomforestclassifier",
+  "timestamp": "2025-09-22T20:34:05.959421",
+  "metrics": {
+    "model_name": "RandomForestClassifier",
+    "model_params": {
+      "n_estimators": 100,
+      "random_state": 42,
+      "max_depth": 10,
+      "min_samples_split": 5,
+      "min_samples_leaf": 2
+    },
+    "data_info": {
+      "train_size": 275,
+      "test_size": 69,
+      "features": [
+        "bill_length_mm",
+        "bill_depth_mm",
+        "flipper_length_mm",
+        "body_mass_g",
+        "year",
+        "island",
+        "sex"
+      ],
+      "target_classes": [
+        "Adelie",
+        "Chinstrap",
+        "Gentoo"
+      ]
+    },
+    "train_metrics": {
+      "accuracy": 0.9963636363636363,
+      "precision": 0.9963932002956393,
+      "recall": 0.9963636363636363,
+      "f1_score": 0.9963540651604738,
+      "per_class": {
+        "Adelie": {
+          "precision": 0.991869918699187,
+          "recall": 1.0,
+          "f1_score": 0.9959183673469387
+        },
+        "Chinstrap": {
+          "precision": 1.0,
+          "recall": 0.9814814814814815,
+          "f1_score": 0.9906542056074766
+        },
+        "Gentoo": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1_score": 1.0
+        }
+      },
+      "confusion_matrix": {
+        "matrix": [
+          [
+            122,
+            0,
+            0
+          ],
+          [
+            1,
+            53,
+            0
+          ],
+          [
+            0,
+            0,
+            99
+          ]
+        ],
+        "labels": [
+          "Adelie",
+          "Chinstrap",
+          "Gentoo"
+        ]
+      },
+      "classification_report": {
+        "Adelie": {
+          "precision": 0.991869918699187,
+          "recall": 1.0,
+          "f1-score": 0.9959183673469387,
+          "support": 122.0
+        },
+        "Chinstrap": {
+          "precision": 1.0,
+          "recall": 0.9814814814814815,
+          "f1-score": 0.9906542056074766,
+          "support": 54.0
+        },
+        "Gentoo": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 99.0
+        },
+        "accuracy": 0.9963636363636363,
+        "macro avg": {
+          "precision": 0.997289972899729,
+          "recall": 0.9938271604938271,
+          "f1-score": 0.995524190984805,
+          "support": 275.0
+        },
+        "weighted avg": {
+          "precision": 0.9963932002956393,
+          "recall": 0.9963636363636363,
+          "f1-score": 0.9963540651604738,
+          "support": 275.0
+        }
+      },
+      "support": {
+        "Adelie": 122,
+        "Chinstrap": 54,
+        "Gentoo": 99
+      },
+      "total_samples": 275,
+      "num_classes": 3,
+      "classes": [
+        "Adelie",
+        "Chinstrap",
+        "Gentoo"
+      ]
+    },
+    "test_metrics": {
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "per_class": {
+        "Adelie": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1_score": 1.0
+        },
+        "Chinstrap": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1_score": 1.0
+        },
+        "Gentoo": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1_score": 1.0
+        }
+      },
+      "confusion_matrix": {
+        "matrix": [
+          [
+            30,
+            0,
+            0
+          ],
+          [
+            0,
+            14,
+            0
+          ],
+          [
+            0,
+            0,
+            25
+          ]
+        ],
+        "labels": [
+          "Adelie",
+          "Chinstrap",
+          "Gentoo"
+        ]
+      },
+      "classification_report": {
+        "Adelie": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 30.0
+        },
+        "Chinstrap": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 14.0
+        },
+        "Gentoo": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 25.0
+        },
+        "accuracy": 1.0,
+        "macro avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 69.0
+        },
+        "weighted avg": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1-score": 1.0,
+          "support": 69.0
+        }
+      },
+      "support": {
+        "Adelie": 30,
+        "Chinstrap": 14,
+        "Gentoo": 25
+      },
+      "total_samples": 69,
+      "num_classes": 3,
+      "classes": [
+        "Adelie",
+        "Chinstrap",
+        "Gentoo"
+      ]
+    },
+    "config": {
+      "seed": 42,
+      "paths": {
+        "raw": "data/raw",
+        "interim": "data/interim",
+        "processed": "data/processed",
+        "processed_dir": "data/processed",
+        "model_dir": "models",
+        "metrics_dir": "models/metrics"
+      },
+      "features": {
+        "numeric_features": [
+          "bill_length_mm",
+          "bill_depth_mm",
+          "flipper_length_mm",
+          "body_mass_g",
+          "year"
+        ],
+        "categorical_features": [
+          "island",
+          "sex"
+        ],
+        "target": "species",
+        "test_size": 0.2,
+        "stratify": true
+      },
+      "model": {
+        "name": "RandomForestClassifier",
+        "params": {
+          "n_estimators": 100,
+          "random_state": 42,
+          "max_depth": 10,
+          "min_samples_split": 5,
+          "min_samples_leaf": 2
+        },
+        "tune": {
+          "grid": [
+            {
+              "n_estimators": [
+                50,
+                100,
+                200
+              ],
+              "max_depth": [
+                5,
+                10,
+                15,
+                null
+              ],
+              "min_samples_split": [
+                2,
+                5,
+                10
+              ],
+              "min_samples_leaf": [
+                1,
+                2,
+                4
+              ]
+            }
+          ],
+          "cv": 5,
+          "scoring": "accuracy",
+          "n_jobs": -1
+        }
+      }
+    }
+  }
+}

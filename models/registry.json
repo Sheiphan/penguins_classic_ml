@@ -1,0 +1,40 @@
+{
+  "models": {
+    "randomforestclassifier": {
+      "model_id": "randomforestclassifier",
+      "filename": "randomforestclassifier.pkl",
+      "created": "2025-09-22T20:34:05.959149",
+      "model_type": "Pipeline",
+      "file_size": 250924,
+      "pipeline_steps": [
+        "preprocessor",
+        "classifier"
+      ],
+      "classes": [
+        "Adelie",
+        "Chinstrap",
+        "Gentoo"
+      ]
+    },
+    "randomforestclassifier_tuned": {
+      "model_id": "randomforestclassifier_tuned",
+      "filename": "randomforestclassifier_tuned.pkl",
+      "created": "2025-09-22T20:00:02.366505",
+      "model_type": "Pipeline",
+      "file_size": 155212,
+      "pipeline_steps": [
+        "preprocessor",
+        "classifier"
+      ],
+      "classes": [
+        "Adelie",
+        "Chinstrap",
+        "Gentoo"
+      ]
+    }
+  },
+  "metadata": {
+    "created": "2025-09-22T17:36:43.310710",
+    "last_updated": "2025-09-22T20:34:05.959170"
+  }
+}

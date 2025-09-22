@@ -7,8 +7,8 @@ from pathlib import Path
 import click
 from loguru import logger
 
-from .core.config import ExperimentConfig, ServingConfig, load_config
-from .models.trainer import train_model, tune_model
+from src.core.config import ExperimentConfig, ServingConfig, load_config
+from src.models.trainer import train_model, tune_model
 
 
 def setup_logging(level: str = "INFO") -> None:
@@ -358,7 +358,7 @@ def list_models(model_dir: str, output_format: str) -> None:
         python -m src.cli list-models --model-dir /path/to/models
     """
     try:
-        from .models.registry import ModelRegistry
+        from src.models.registry import ModelRegistry
 
         registry = ModelRegistry(model_dir)
         models = registry.list_models()
@@ -447,7 +447,7 @@ def model_info(model_id: str, model_dir: str) -> None:
         python -m src.cli model-info my_model --model-dir /path/to/models
     """
     try:
-        from .models.registry import ModelRegistry
+        from src.models.registry import ModelRegistry
 
         registry = ModelRegistry(model_dir)
 
