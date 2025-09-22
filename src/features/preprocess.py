@@ -1,6 +1,5 @@
 """Preprocessing pipeline for the penguins dataset using sklearn."""
 
-
 import pandas as pd
 from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer

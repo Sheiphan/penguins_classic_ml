@@ -30,7 +30,7 @@ class PenguinDataLoader:
     def load_raw_data(self) -> pd.DataFrame:
         """Load raw data from CSV file."""
         from loguru import logger
-        
+
         if not self.data_path.exists():
             logger.error(f"Data file not found: {self.data_path}")
             raise FileNotFoundError(f"Data file not found: {self.data_path}")
@@ -38,14 +38,16 @@ class PenguinDataLoader:
         if self._raw_data is None:
             logger.info(f"Loading raw data from: {self.data_path}")
             self._raw_data = pd.read_csv(self.data_path)
-            logger.info(f"Loaded {len(self._raw_data)} rows with {len(self._raw_data.columns)} columns")
+            logger.info(
+                f"Loaded {len(self._raw_data)} rows with {len(self._raw_data.columns)} columns"
+            )
 
         return self._raw_data.copy()
 
     def load_clean_data(self) -> pd.DataFrame:
         """Load and clean the data according to schema."""
         from loguru import logger
-        
+
         if self._clean_data is None:
             logger.info("Cleaning and validating data schema")
             raw_data = self.load_raw_data()
@@ -84,9 +86,11 @@ class PenguinDataLoader:
             Tuple of (X_train, X_test, y_train, y_test)
         """
         from loguru import logger
-        
+
         X, y = self.get_features_and_target()
-        logger.info(f"Splitting data: {len(X)} samples, test_size={test_size}, stratify={stratify}")
+        logger.info(
+            f"Splitting data: {len(X)} samples, test_size={test_size}, stratify={stratify}"
+        )
 
         # Only stratify if we have enough samples per class
         stratify_param = y if stratify else None
@@ -95,7 +99,9 @@ class PenguinDataLoader:
             min_class_count = class_counts.min()
             logger.info(f"Class distribution: {class_counts.to_dict()}")
             if min_class_count < 2:
-                logger.warning(f"Minimum class count is {min_class_count}, disabling stratification")
+                logger.warning(
+                    f"Minimum class count is {min_class_count}, disabling stratification"
+                )
                 stratify_param = None
 
         X_train, X_test, y_train, y_test = train_test_split(
@@ -105,7 +111,7 @@ class PenguinDataLoader:
             random_state=random_state,
             stratify=stratify_param,
         )
-        
+
         logger.info(f"Split completed: train={len(X_train)}, test={len(X_test)}")
         return X_train, X_test, y_train, y_test
 

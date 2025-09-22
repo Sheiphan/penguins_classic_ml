@@ -1,6 +1,5 @@
 """Data schema definitions for the penguins dataset."""
 
-
 import pandas as pd
 from pydantic import BaseModel, Field, field_validator
 
@@ -51,9 +50,7 @@ class PenguinRecord(BaseModel):
         None, ge=0, description="Flipper length in millimeters"
     )
     body_mass_g: float | None = Field(None, ge=0, description="Body mass in grams")
-    year: int | None = Field(
-        None, ge=2007, le=2009, description="Year of observation"
-    )
+    year: int | None = Field(None, ge=2007, le=2009, description="Year of observation")
     island: str | None = Field(None, description="Island where penguin was observed")
     sex: str | None = Field(None, description="Sex of the penguin")
     species: str | None = Field(None, description="Species of the penguin")

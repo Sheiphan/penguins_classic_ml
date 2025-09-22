@@ -524,7 +524,7 @@ class TestRealDatasetIntegration:
         """Test training with the actual penguins_lter.csv dataset."""
         # Use the real dataset
         data_path = "data/raw/penguins_lter.csv"
-        
+
         # Skip if dataset doesn't exist
         if not Path(data_path).exists():
             pytest.skip("Real penguins dataset not found")
@@ -532,20 +532,20 @@ class TestRealDatasetIntegration:
         # Test data loading
         loader = PenguinDataLoader(data_path)
         data_info = loader.get_data_info()
-        
+
         # Verify dataset properties
         assert data_info["total_rows"] > 300  # Should have ~344 rows
         assert data_info["rows_with_target"] > 300
         assert len(data_info["target_distribution"]) == 3  # 3 species
         assert "Adelie" in data_info["target_distribution"]
-        assert "Gentoo" in data_info["target_distribution"] 
+        assert "Gentoo" in data_info["target_distribution"]
         assert "Chinstrap" in data_info["target_distribution"]
 
         # Test train-test split
         X_train, X_test, y_train, y_test = loader.train_test_split(
             test_size=0.2, random_state=42, stratify=True
         )
-        
+
         assert len(X_train) + len(X_test) == data_info["rows_with_target"]
         assert len(y_train.unique()) == 3  # All species in training set
         assert len(y_test.unique()) >= 2  # At least 2 species in test set
@@ -558,11 +558,16 @@ class TestRealDatasetIntegration:
                 params={"n_estimators": 50, "random_state": 42},
             ),
         )
-        
+
         trainer = ModelTrainer(config)
-        results = trainer.train(X_train=X_train, y_train=y_train, 
-                              X_test=X_test, y_test=y_test, save_model=False)
-        
+        results = trainer.train(
+            X_train=X_train,
+            y_train=y_train,
+            X_test=X_test,
+            y_test=y_test,
+            save_model=False,
+        )
+
         # Verify training results
         assert results["test_metrics"]["accuracy"] > 0.8  # Should achieve good accuracy
         assert results["test_metrics"]["f1_score"] > 0.8
@@ -573,34 +578,36 @@ class TestRealDatasetIntegration:
     def test_real_dataset_hyperparameter_tuning(self):
         """Test hyperparameter tuning with real dataset."""
         data_path = "data/raw/penguins_lter.csv"
-        
+
         if not Path(data_path).exists():
             pytest.skip("Real penguins dataset not found")
 
         # Create tuning configuration
         from src.core.config import TuneConfig
-        
+
         config = ExperimentConfig(
             seed=42,
             model=ModelConfig(
                 name="RandomForestClassifier",
                 params={"random_state": 42},
                 tune=TuneConfig(
-                    grid=[{
-                        "n_estimators": [20, 50],
-                        "max_depth": [5, 10],
-                        "min_samples_split": [2, 5]
-                    }],
+                    grid=[
+                        {
+                            "n_estimators": [20, 50],
+                            "max_depth": [5, 10],
+                            "min_samples_split": [2, 5],
+                        }
+                    ],
                     cv=3,
                     scoring="f1_macro",
-                    n_jobs=1
+                    n_jobs=1,
                 ),
             ),
         )
-        
+
         trainer = ModelTrainer(config)
         results = trainer.tune_hyperparameters(save_best_model=False)
-        
+
         # Verify tuning results
         assert "best_params" in results
         assert "best_score" in results
@@ -612,7 +619,7 @@ class TestRealDatasetIntegration:
     def test_real_dataset_api_serving(self):
         """Test API serving with model trained on real dataset."""
         data_path = "data/raw/penguins_lter.csv"
-        
+
         if not Path(data_path).exists():
             pytest.skip("Real penguins dataset not found")
 
@@ -631,16 +638,16 @@ class TestRealDatasetIntegration:
             )
             config.paths.model_dir = str(models_dir / "artifacts")
             config.paths.metrics_dir = str(models_dir / "metrics")
-            
+
             trainer = ModelTrainer(config)
             results = trainer.train(save_model=True)
-            
+
             # Test serving with trained model
             from src.serving.app import PenguinPredictor
             from src.serving.schemas import PredictRequest
-            
+
             predictor = PenguinPredictor(str(models_dir / "artifacts"))
-            
+
             # Test with real penguin characteristics
             # Adelie penguin characteristics
             adelie_request = PredictRequest(
@@ -652,12 +659,12 @@ class TestRealDatasetIntegration:
                 sex="MALE",
                 year=2007,
             )
-            
+
             response = predictor.predict(adelie_request)
             assert response.prediction in ["Adelie", "Chinstrap", "Gentoo"]
             assert response.confidence is not None
             assert 0 <= response.confidence <= 1
-            
+
             # Gentoo penguin characteristics (larger)
             gentoo_request = PredictRequest(
                 island="Biscoe",
@@ -668,7 +675,7 @@ class TestRealDatasetIntegration:
                 sex="FEMALE",
                 year=2008,
             )
-            
+
             response = predictor.predict(gentoo_request)
             assert response.prediction in ["Adelie", "Chinstrap", "Gentoo"]
             assert response.confidence is not None
@@ -676,23 +683,23 @@ class TestRealDatasetIntegration:
     def test_complete_mlops_pipeline(self):
         """Test complete MLOps pipeline from data to deployment."""
         data_path = "data/raw/penguins_lter.csv"
-        
+
         if not Path(data_path).exists():
             pytest.skip("Real penguins dataset not found")
 
         with tempfile.TemporaryDirectory() as temp_dir:
             temp_path = Path(temp_dir)
-            
+
             # Create project structure
             (temp_path / "models" / "artifacts").mkdir(parents=True)
             (temp_path / "models" / "metrics").mkdir(parents=True)
             (temp_path / "configs").mkdir()
-            
+
             # Step 1: Data validation and loading
             loader = PenguinDataLoader(data_path)
             data_info = loader.get_data_info()
             assert data_info["rows_with_target"] > 0
-            
+
             # Step 2: Model training
             config = ExperimentConfig(
                 seed=42,
@@ -703,36 +710,36 @@ class TestRealDatasetIntegration:
             )
             config.paths.model_dir = str(temp_path / "models" / "artifacts")
             config.paths.metrics_dir = str(temp_path / "models" / "metrics")
-            
+
             trainer = ModelTrainer(config)
             training_results = trainer.train(save_model=True)
-            
+
             # Verify training
             assert training_results["test_metrics"]["accuracy"] > 0.7
             model_id = training_results["model_id"]
-            
+
             # Step 3: Model registry operations
             from src.models.registry import ModelRegistry
-            
+
             registry = ModelRegistry(str(temp_path / "models" / "artifacts"))
             models = registry.list_models()
             assert model_id in models
-            
+
             model_info = registry.get_model_info(model_id)
             assert model_info["model_id"] == model_id
             assert len(model_info["classes"]) == 3
-            
+
             # Step 4: Model serving
             from src.serving.app import PenguinPredictor
-            
+
             predictor = PenguinPredictor(str(temp_path / "models" / "artifacts"))
             health = predictor.get_health()
             assert health.status == "healthy"
             assert health.model_loaded is True
-            
+
             # Step 5: Prediction testing
-            from src.serving.schemas import PredictRequest, BatchPredictRequest
-            
+            from src.serving.schemas import BatchPredictRequest, PredictRequest
+
             # Single prediction
             request = PredictRequest(
                 island="Dream",
@@ -743,63 +750,61 @@ class TestRealDatasetIntegration:
                 sex="MALE",
                 year=2009,
             )
-            
+
             response = predictor.predict(request)
             assert response.prediction in ["Adelie", "Chinstrap", "Gentoo"]
-            
+
             # Batch prediction
             batch_request = BatchPredictRequest(instances=[request, request])
             batch_response = predictor.predict_batch(batch_request)
             assert len(batch_response.predictions) == 2
-            
+
             # Step 6: Performance validation
             # Test prediction latency
             import time
-            
+
             start_time = time.time()
             for _ in range(10):
                 predictor.predict(request)
             avg_latency = (time.time() - start_time) / 10
-            
+
             # Should be fast (less than 100ms per prediction)
             assert avg_latency < 0.1
-            
-            print(f"Complete MLOps pipeline test passed!")
+
+            print("Complete MLOps pipeline test passed!")
             print(f"Model accuracy: {training_results['test_metrics']['accuracy']:.3f}")
             print(f"Average prediction latency: {avg_latency*1000:.1f}ms")
 
 
-@pytest.mark.integration 
+@pytest.mark.integration
 class TestDockerIntegration:
     """Test Docker container integration."""
-    
+
     def test_training_container_build(self):
         """Test that training container can be built."""
         # This test requires Docker to be available
         try:
             import subprocess
+
             result = subprocess.run(
-                ["docker", "--version"], 
-                capture_output=True, 
-                text=True, 
-                timeout=10
+                ["docker", "--version"], capture_output=True, text=True, timeout=10
             )
             if result.returncode != 0:
                 pytest.skip("Docker not available")
         except (subprocess.TimeoutExpired, FileNotFoundError):
             pytest.skip("Docker not available")
-        
+
         # Test building training container
         result = subprocess.run(
             ["docker", "build", "-f", "Dockerfile.train", "-t", "test-train", "."],
             capture_output=True,
             text=True,
-            timeout=300  # 5 minutes timeout
+            timeout=300,  # 5 minutes timeout
         )
-        
+
         # Should build successfully
         assert result.returncode == 0, f"Docker build failed: {result.stderr}"
-        
+
         # Clean up
         subprocess.run(["docker", "rmi", "test-train"], capture_output=True)
 
@@ -807,28 +812,26 @@ class TestDockerIntegration:
         """Test that serving container can be built."""
         try:
             import subprocess
+
             result = subprocess.run(
-                ["docker", "--version"], 
-                capture_output=True, 
-                text=True, 
-                timeout=10
+                ["docker", "--version"], capture_output=True, text=True, timeout=10
             )
             if result.returncode != 0:
                 pytest.skip("Docker not available")
         except (subprocess.TimeoutExpired, FileNotFoundError):
             pytest.skip("Docker not available")
-        
+
         # Test building serving container
         result = subprocess.run(
             ["docker", "build", "-f", "Dockerfile.app", "-t", "test-serve", "."],
             capture_output=True,
             text=True,
-            timeout=300  # 5 minutes timeout
+            timeout=300,  # 5 minutes timeout
         )
-        
+
         # Should build successfully
         assert result.returncode == 0, f"Docker build failed: {result.stderr}"
-        
+
         # Clean up
         subprocess.run(["docker", "rmi", "test-serve"], capture_output=True)
 
@@ -836,25 +839,25 @@ class TestDockerIntegration:
 @pytest.mark.integration
 class TestCIWorkflowSimulation:
     """Simulate CI/CD workflow steps."""
-    
+
     def test_code_quality_checks(self):
         """Test code quality checks that would run in CI."""
         import subprocess
-        
+
         # Test ruff linting
         result = subprocess.run(
             ["uv", "run", "ruff", "check", "src/", "tests/"],
             capture_output=True,
-            text=True
+            text=True,
         )
         # Should pass or have only minor issues
         assert result.returncode in [0, 1], f"Ruff check failed: {result.stdout}"
-        
+
         # Test ruff formatting
         result = subprocess.run(
             ["uv", "run", "ruff", "format", "--check", "src/", "tests/"],
             capture_output=True,
-            text=True
+            text=True,
         )
         # Should be properly formatted
         assert result.returncode == 0, f"Code formatting issues: {result.stdout}"
@@ -862,36 +865,43 @@ class TestCIWorkflowSimulation:
     def test_unit_test_coverage(self):
         """Test that unit tests achieve reasonable coverage."""
         import subprocess
-        
+
         result = subprocess.run(
-            ["uv", "run", "pytest", "tests/", "-v", "--cov=src", "--cov-report=term-missing", "--cov-fail-under=70"],
+            [
+                "uv",
+                "run",
+                "pytest",
+                "tests/",
+                "-v",
+                "--cov=src",
+                "--cov-report=term-missing",
+                "--cov-fail-under=70",
+            ],
             capture_output=True,
-            text=True
+            text=True,
         )
-        
+
         # Should achieve at least 70% coverage
         assert result.returncode == 0, f"Test coverage too low: {result.stdout}"
 
     def test_security_scan_simulation(self):
         """Simulate security scanning that would run in CI."""
         import subprocess
-        
+
         # Test bandit security scan
         result = subprocess.run(
             ["uv", "run", "bandit", "-r", "src/", "-f", "json"],
             capture_output=True,
-            text=True
+            text=True,
         )
-        
+
         # Bandit may find issues but shouldn't crash
         assert result.returncode in [0, 1], f"Bandit scan failed: {result.stderr}"
-        
+
         # Test safety check for known vulnerabilities
         result = subprocess.run(
-            ["uv", "run", "safety", "check", "--json"],
-            capture_output=True,
-            text=True
+            ["uv", "run", "safety", "check", "--json"], capture_output=True, text=True
         )
-        
+
         # Safety may find issues but shouldn't crash
         assert result.returncode in [0, 1], f"Safety check failed: {result.stderr}"

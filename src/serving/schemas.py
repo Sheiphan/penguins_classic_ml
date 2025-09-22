@@ -1,6 +1,5 @@
 """Pydantic schemas for API request/response models."""
 
-
 from pydantic import BaseModel, Field
 
 
@@ -107,9 +106,7 @@ class HealthResponse(BaseModel):
 
     status: str = Field(..., description="Service health status")
     model_loaded: bool = Field(..., description="Whether model is loaded successfully")
-    model_info: dict | None = Field(
-        None, description="Information about loaded model"
-    )
+    model_info: dict | None = Field(None, description="Information about loaded model")
     timestamp: str = Field(..., description="Health check timestamp")
 
     model_config = {

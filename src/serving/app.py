@@ -171,7 +171,8 @@ class PenguinPredictor:
                 classes = self.model.classes_
 
                 probabilities = {
-                    str(cls): float(prob) for cls, prob in zip(classes, proba, strict=False)
+                    str(cls): float(prob)
+                    for cls, prob in zip(classes, proba, strict=False)
                 }
                 confidence = float(max(proba))
 
@@ -270,6 +271,7 @@ app = FastAPI(
     redoc_url="/redoc",
 )
 
+
 @app.on_event("startup")
 async def startup_event():
     """Log startup information."""
@@ -278,10 +280,12 @@ async def startup_event():
     if predictor.model_info:
         logger.info(f"Model info: {predictor.model_info}")
 
+
 @app.on_event("shutdown")
 async def shutdown_event():
     """Log shutdown information."""
     logger.info("Shutting down Penguin Species Classifier API")
+
 
 # Add CORS middleware
 app.add_middleware(
@@ -342,11 +346,13 @@ async def predict_species(request: PredictRequest):
     """Predict penguin species for a single instance."""
     logger.info(f"Prediction request received: {request.model_dump()}")
     start_time = datetime.now()
-    
+
     try:
         result = predictor.predict(request)
         duration = (datetime.now() - start_time).total_seconds()
-        logger.info(f"Prediction completed in {duration:.3f}s: {result.prediction} (confidence: {result.confidence})")
+        logger.info(
+            f"Prediction completed in {duration:.3f}s: {result.prediction} (confidence: {result.confidence})"
+        )
         return result
     except Exception as e:
         duration = (datetime.now() - start_time).total_seconds()
@@ -357,13 +363,17 @@ async def predict_species(request: PredictRequest):
 @app.post("/predict/batch", response_model=BatchPredictResponse)
 async def predict_species_batch(request: BatchPredictRequest):
     """Predict penguin species for multiple instances."""
-    logger.info(f"Batch prediction request received with {len(request.instances)} instances")
+    logger.info(
+        f"Batch prediction request received with {len(request.instances)} instances"
+    )
     start_time = datetime.now()
-    
+
     try:
         result = predictor.predict_batch(request)
         duration = (datetime.now() - start_time).total_seconds()
-        logger.info(f"Batch prediction completed in {duration:.3f}s for {len(result.predictions)} instances")
+        logger.info(
+            f"Batch prediction completed in {duration:.3f}s for {len(result.predictions)} instances"
+        )
         return result
     except Exception as e:
         duration = (datetime.now() - start_time).total_seconds()
