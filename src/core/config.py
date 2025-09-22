@@ -1,7 +1,7 @@
 """Configuration management using Pydantic for type-safe settings."""
 
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import yaml
 from pydantic import BaseModel, Field, field_validator
@@ -30,7 +30,7 @@ class PathConfig(BaseModel):
 class TuneConfig(BaseModel):
     """Configuration for hyperparameter tuning."""
 
-    grid: List[Dict[str, Any]] = Field(default_factory=list)
+    grid: list[dict[str, Any]] = Field(default_factory=list)
     cv: int = 5
     scoring: str = "accuracy"
     n_jobs: int = -1
@@ -40,14 +40,14 @@ class ModelConfig(BaseModel):
     """Configuration for model training."""
 
     name: str = "RandomForestClassifier"
-    params: Dict[str, Any] = Field(default_factory=dict)
-    tune: Optional[TuneConfig] = None
+    params: dict[str, Any] = Field(default_factory=dict)
+    tune: TuneConfig | None = None
 
 
 class FeatureConfig(BaseModel):
     """Configuration for feature processing."""
 
-    numeric_features: List[str] = Field(
+    numeric_features: list[str] = Field(
         default_factory=lambda: [
             "bill_length_mm",
             "bill_depth_mm",
@@ -56,7 +56,7 @@ class FeatureConfig(BaseModel):
             "year",
         ]
     )
-    categorical_features: List[str] = Field(default_factory=lambda: ["island", "sex"])
+    categorical_features: list[str] = Field(default_factory=lambda: ["island", "sex"])
     target: str = "species"
     test_size: float = 0.2
     stratify: bool = True
@@ -75,25 +75,31 @@ class ExperimentConfig(BaseSettings):
         env_nested_delimiter = "__"
 
 
-class APIConfig(BaseModel):
+class APIConfig(BaseSettings):
     """Configuration for API serving."""
 
-    host: str = "0.0.0.0"
-    port: int = 8000
-    reload: bool = False
-    workers: int = 1
+    host: str = Field(default="0.0.0.0", env="API_HOST")
+    port: int = Field(default=8000, env="API_PORT")
+    reload: bool = Field(default=False, env="RELOAD")
+    workers: int = Field(default=1, env="API_WORKERS")
+
+    class Config:
+        env_file = ".env"
 
 
-class LoggingConfig(BaseModel):
+class LoggingConfig(BaseSettings):
     """Configuration for logging."""
 
-    level: str = "INFO"
+    level: str = Field(default="INFO", env="LOG_LEVEL")
     format: str = (
         "{time:YYYY-MM-DD HH:mm:ss} | {level} | {name}:{function}:{line} | {message}"
     )
     rotation: str = "1 day"
     retention: str = "30 days"
-    log_file: Optional[str] = "logs/app.log"
+    log_file: str | None = "logs/app.log"
+
+    class Config:
+        env_file = ".env"
 
 
 class ServingConfig(BaseSettings):
@@ -116,7 +122,7 @@ def load_config(config_path: str, config_class=ExperimentConfig):
         # Return default configuration if file doesn't exist
         return config_class()
 
-    with open(config_file, "r") as f:
+    with open(config_file) as f:
         config_data = yaml.safe_load(f)
 
     if config_data is None:

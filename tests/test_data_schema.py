@@ -4,11 +4,19 @@ import pandas as pd
 import pytest
 from pydantic import ValidationError
 
-from src.data.schema import (ALL_FEATURES, CATEGORICAL_FEATURES,
-                             NUMERIC_FEATURES, TARGET, VALID_ISLANDS,
-                             VALID_SEXES, VALID_SPECIES, PenguinDataset,
-                             PenguinRecord, get_feature_info,
-                             validate_dataframe_schema)
+from src.data.schema import (
+    ALL_FEATURES,
+    CATEGORICAL_FEATURES,
+    NUMERIC_FEATURES,
+    TARGET,
+    VALID_ISLANDS,
+    VALID_SEXES,
+    VALID_SPECIES,
+    PenguinDataset,
+    PenguinRecord,
+    get_feature_info,
+    validate_dataframe_schema,
+)
 
 
 class TestPenguinRecord:

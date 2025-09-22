@@ -8,9 +8,13 @@ import pandas as pd
 import pytest
 from sklearn.metrics import accuracy_score
 
-from src.models.metrics import (MetricsStorage, ModelMetrics,
-                                calculate_model_metrics, load_model_metrics,
-                                save_model_metrics)
+from src.models.metrics import (
+    MetricsStorage,
+    ModelMetrics,
+    calculate_model_metrics,
+    load_model_metrics,
+    save_model_metrics,
+)
 
 
 @pytest.fixture

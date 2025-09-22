@@ -33,7 +33,13 @@ help:
 	@echo ""
 	@echo "Docker:"
 	@echo "  docker-build - Build Docker images"
-	@echo "  docker-run   - Run with Docker Compose"
+	@echo "  docker-test  - Test Docker containers"
+	@echo "  docker-train - Run training in Docker"
+	@echo "  docker-api   - Start API server in Docker"
+	@echo "  docker-dev   - Start development API in Docker"
+	@echo "  docker-full  - Run full stack in Docker"
+	@echo "  docker-clean - Clean up Docker resources"
+	@echo "  docker-validate - Validate Docker configuration"
 	@echo ""
 	@echo "CLI Help:"
 	@echo "  cli-help     - Show CLI help"
@@ -146,12 +152,39 @@ serve-help:
 	@echo "Serving command help:"
 	@uv run python -m src.cli serve --help
 
-# Docker commands (to be implemented in later tasks)
+# Docker commands
 docker-build:
 	@echo "Building Docker images..."
-	@docker build -f docker/Dockerfile.train -t ml-classifier-train .
-	@docker build -f docker/Dockerfile.app -t ml-classifier-app .
+	@docker build -f Dockerfile.train -t ml-classifier-train .
+	@docker build -f Dockerfile.app -t ml-classifier-app .
 
-docker-run:
-	@echo "Running with Docker Compose..."
-	@docker-compose up
+docker-test:
+	@echo "Testing Docker containers..."
+	@chmod +x scripts/test_containers.sh
+	@./scripts/test_containers.sh
+
+docker-train:
+	@echo "Running training in Docker..."
+	@docker-compose --profile train up train
+
+docker-api:
+	@echo "Starting API server in Docker..."
+	@docker-compose --profile api up api
+
+docker-dev:
+	@echo "Starting development API server in Docker..."
+	@docker-compose --profile dev up api-dev
+
+docker-full:
+	@echo "Running full stack (train + serve) in Docker..."
+	@docker-compose --profile full up
+
+docker-clean:
+	@echo "Cleaning up Docker resources..."
+	@docker-compose down --volumes --remove-orphans
+	@docker system prune -f
+
+docker-validate:
+	@echo "Validating Docker configuration..."
+	@chmod +x scripts/validate_docker.sh
+	@./scripts/validate_docker.sh

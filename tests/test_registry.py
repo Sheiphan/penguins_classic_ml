@@ -10,9 +10,12 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-from src.models.registry import (ModelRegistry, create_model_registry,
-                                 load_model_from_registry,
-                                 save_model_to_registry)
+from src.models.registry import (
+    ModelRegistry,
+    create_model_registry,
+    load_model_from_registry,
+    save_model_to_registry,
+)
 
 
 @pytest.fixture

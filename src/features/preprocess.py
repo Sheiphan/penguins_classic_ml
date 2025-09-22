@@ -1,6 +1,5 @@
 """Preprocessing pipeline for the penguins dataset using sklearn."""
 
-from typing import Optional, Tuple
 
 import pandas as pd
 from sklearn.compose import ColumnTransformer
@@ -37,8 +36,8 @@ class PenguinPreprocessor:
         self.handle_unknown = handle_unknown
         self.drop_first = drop_first
 
-        self._preprocessor: Optional[ColumnTransformer] = None
-        self._feature_names: Optional[list] = None
+        self._preprocessor: ColumnTransformer | None = None
+        self._feature_names: list | None = None
 
     def build_preprocessor(self) -> ColumnTransformer:
         """Build the preprocessing pipeline.
@@ -174,7 +173,7 @@ class PenguinPreprocessor:
 
         self._feature_names = feature_names
 
-    def get_feature_names(self) -> Optional[list]:
+    def get_feature_names(self) -> list | None:
         """Get the names of the output features.
 
         Returns:
@@ -182,7 +181,7 @@ class PenguinPreprocessor:
         """
         return self._feature_names
 
-    def get_preprocessor(self) -> Optional[ColumnTransformer]:
+    def get_preprocessor(self) -> ColumnTransformer | None:
         """Get the underlying sklearn preprocessor.
 
         Returns:
@@ -220,8 +219,8 @@ def create_preprocessor(
 
 
 def preprocess_data(
-    X_train: pd.DataFrame, X_test: Optional[pd.DataFrame] = None, **preprocessor_kwargs
-) -> Tuple[pd.DataFrame, Optional[pd.DataFrame], PenguinPreprocessor]:
+    X_train: pd.DataFrame, X_test: pd.DataFrame | None = None, **preprocessor_kwargs
+) -> tuple[pd.DataFrame, pd.DataFrame | None, PenguinPreprocessor]:
     """Convenience function to preprocess training and test data.
 
     Args:

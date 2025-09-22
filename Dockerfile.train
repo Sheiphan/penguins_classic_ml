@@ -1,0 +1,40 @@
+# Multi-stage build for training workloads
+FROM python:3.11-slim as base
+
+# Set environment variables
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install uv
+RUN pip install uv
+
+# Set working directory
+WORKDIR /app
+
+# Copy dependency files
+COPY pyproject.toml uv.lock ./
+
+# Install dependencies
+RUN uv sync --frozen --no-dev
+
+# Copy source code
+COPY src/ ./src/
+COPY configs/ ./configs/
+COPY data/ ./data/
+
+# Create necessary directories
+RUN mkdir -p models/artifacts models/metrics logs results/experiments
+
+# Set Python path
+ENV PYTHONPATH=/app
+
+# Default command for training
+CMD ["uv", "run", "python", "-m", "src.cli", "train"]

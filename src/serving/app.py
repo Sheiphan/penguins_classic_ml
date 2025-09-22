@@ -2,7 +2,6 @@
 
 import traceback
 from datetime import datetime
-from typing import Optional, Union
 
 import pandas as pd
 from fastapi import FastAPI, HTTPException, status
@@ -15,9 +14,15 @@ from sklearn.pipeline import Pipeline
 from ..core.config import ServingConfig, load_config
 from ..data.schema import ALL_FEATURES, VALID_ISLANDS, VALID_SEXES
 from ..models.registry import ModelRegistry
-from .schemas import (BatchPredictRequest, BatchPredictResponse, ErrorResponse,
-                      HealthResponse, ModelInfoResponse, PredictRequest,
-                      PredictResponse)
+from .schemas import (
+    BatchPredictRequest,
+    BatchPredictResponse,
+    ErrorResponse,
+    HealthResponse,
+    ModelInfoResponse,
+    PredictRequest,
+    PredictResponse,
+)
 
 
 class PenguinPredictor:
@@ -30,8 +35,8 @@ class PenguinPredictor:
             model_registry_dir: Directory containing model registry
         """
         self.model_registry = ModelRegistry(model_registry_dir)
-        self.model: Optional[Union[BaseEstimator, Pipeline]] = None
-        self.model_info: Optional[dict] = None
+        self.model: BaseEstimator | Pipeline | None = None
+        self.model_info: dict | None = None
         self.load_model()
 
     def load_model(self) -> bool:
@@ -166,7 +171,7 @@ class PenguinPredictor:
                 classes = self.model.classes_
 
                 probabilities = {
-                    str(cls): float(prob) for cls, prob in zip(classes, proba)
+                    str(cls): float(prob) for cls, prob in zip(classes, proba, strict=False)
                 }
                 confidence = float(max(proba))
 
@@ -265,6 +270,19 @@ app = FastAPI(
     redoc_url="/redoc",
 )
 
+@app.on_event("startup")
+async def startup_event():
+    """Log startup information."""
+    logger.info("Starting Penguin Species Classifier API")
+    logger.info(f"Model loaded: {predictor.model is not None}")
+    if predictor.model_info:
+        logger.info(f"Model info: {predictor.model_info}")
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    """Log shutdown information."""
+    logger.info("Shutting down Penguin Species Classifier API")
+
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
@@ -307,7 +325,10 @@ async def general_exception_handler(request, exc: Exception):
 @app.get("/health", response_model=HealthResponse)
 async def health_check():
     """Health check endpoint."""
-    return predictor.get_health()
+    logger.debug("Health check requested")
+    health_status = predictor.get_health()
+    logger.debug(f"Health check result: {health_status.status}")
+    return health_status
 
 
 @app.get("/model/info", response_model=ModelInfoResponse)
@@ -319,13 +340,35 @@ async def get_model_info():
 @app.post("/predict", response_model=PredictResponse)
 async def predict_species(request: PredictRequest):
     """Predict penguin species for a single instance."""
-    return predictor.predict(request)
+    logger.info(f"Prediction request received: {request.model_dump()}")
+    start_time = datetime.now()
+    
+    try:
+        result = predictor.predict(request)
+        duration = (datetime.now() - start_time).total_seconds()
+        logger.info(f"Prediction completed in {duration:.3f}s: {result.prediction} (confidence: {result.confidence})")
+        return result
+    except Exception as e:
+        duration = (datetime.now() - start_time).total_seconds()
+        logger.error(f"Prediction failed after {duration:.3f}s: {str(e)}")
+        raise
 
 
 @app.post("/predict/batch", response_model=BatchPredictResponse)
 async def predict_species_batch(request: BatchPredictRequest):
     """Predict penguin species for multiple instances."""
-    return predictor.predict_batch(request)
+    logger.info(f"Batch prediction request received with {len(request.instances)} instances")
+    start_time = datetime.now()
+    
+    try:
+        result = predictor.predict_batch(request)
+        duration = (datetime.now() - start_time).total_seconds()
+        logger.info(f"Batch prediction completed in {duration:.3f}s for {len(result.predictions)} instances")
+        return result
+    except Exception as e:
+        duration = (datetime.now() - start_time).total_seconds()
+        logger.error(f"Batch prediction failed after {duration:.3f}s: {str(e)}")
+        raise
 
 
 @app.get("/")

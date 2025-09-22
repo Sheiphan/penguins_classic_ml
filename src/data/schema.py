@@ -1,6 +1,5 @@
 """Data schema definitions for the penguins dataset."""
 
-from typing import List, Optional
 
 import pandas as pd
 from pydantic import BaseModel, Field, field_validator
@@ -42,22 +41,22 @@ VALID_SPECIES = ["Adelie", "Chinstrap", "Gentoo"]
 class PenguinRecord(BaseModel):
     """Schema for a single penguin record."""
 
-    bill_length_mm: Optional[float] = Field(
+    bill_length_mm: float | None = Field(
         None, ge=0, description="Bill length in millimeters"
     )
-    bill_depth_mm: Optional[float] = Field(
+    bill_depth_mm: float | None = Field(
         None, ge=0, description="Bill depth in millimeters"
     )
-    flipper_length_mm: Optional[float] = Field(
+    flipper_length_mm: float | None = Field(
         None, ge=0, description="Flipper length in millimeters"
     )
-    body_mass_g: Optional[float] = Field(None, ge=0, description="Body mass in grams")
-    year: Optional[int] = Field(
+    body_mass_g: float | None = Field(None, ge=0, description="Body mass in grams")
+    year: int | None = Field(
         None, ge=2007, le=2009, description="Year of observation"
     )
-    island: Optional[str] = Field(None, description="Island where penguin was observed")
-    sex: Optional[str] = Field(None, description="Sex of the penguin")
-    species: Optional[str] = Field(None, description="Species of the penguin")
+    island: str | None = Field(None, description="Island where penguin was observed")
+    sex: str | None = Field(None, description="Sex of the penguin")
+    species: str | None = Field(None, description="Species of the penguin")
 
     @field_validator("island")
     @classmethod
@@ -98,7 +97,7 @@ class PenguinRecord(BaseModel):
 class PenguinDataset(BaseModel):
     """Schema for the complete penguins dataset."""
 
-    records: List[PenguinRecord]
+    records: list[PenguinRecord]
 
     @classmethod
     def from_dataframe(cls, df: pd.DataFrame) -> "PenguinDataset":

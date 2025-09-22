@@ -1,6 +1,5 @@
 """Pydantic schemas for API request/response models."""
 
-from typing import List, Optional
 
 from pydantic import BaseModel, Field
 
@@ -37,10 +36,10 @@ class PredictResponse(BaseModel):
     """Response schema for penguin species prediction."""
 
     prediction: str = Field(..., description="Predicted penguin species")
-    confidence: Optional[float] = Field(
+    confidence: float | None = Field(
         None, ge=0, le=1, description="Prediction confidence score"
     )
-    probabilities: Optional[dict] = Field(None, description="Class probabilities")
+    probabilities: dict | None = Field(None, description="Class probabilities")
 
     model_config = {
         "json_schema_extra": {
@@ -56,7 +55,7 @@ class PredictResponse(BaseModel):
 class BatchPredictRequest(BaseModel):
     """Request schema for batch penguin species prediction."""
 
-    instances: List[PredictRequest] = Field(
+    instances: list[PredictRequest] = Field(
         ..., description="List of penguin instances to predict"
     )
 
@@ -82,7 +81,7 @@ class BatchPredictRequest(BaseModel):
 class BatchPredictResponse(BaseModel):
     """Response schema for batch penguin species prediction."""
 
-    predictions: List[PredictResponse] = Field(..., description="List of predictions")
+    predictions: list[PredictResponse] = Field(..., description="List of predictions")
 
     model_config = {
         "json_schema_extra": {
@@ -108,7 +107,7 @@ class HealthResponse(BaseModel):
 
     status: str = Field(..., description="Service health status")
     model_loaded: bool = Field(..., description="Whether model is loaded successfully")
-    model_info: Optional[dict] = Field(
+    model_info: dict | None = Field(
         None, description="Information about loaded model"
     )
     timestamp: str = Field(..., description="Health check timestamp")
@@ -134,7 +133,7 @@ class ErrorResponse(BaseModel):
 
     error: str = Field(..., description="Error type")
     message: str = Field(..., description="Error message")
-    details: Optional[dict] = Field(None, description="Additional error details")
+    details: dict | None = Field(None, description="Additional error details")
 
     model_config = {
         "json_schema_extra": {
@@ -155,8 +154,8 @@ class ModelInfoResponse(BaseModel):
 
     model_id: str = Field(..., description="Model identifier")
     model_type: str = Field(..., description="Type of model")
-    classes: List[str] = Field(..., description="Target classes")
-    features: List[str] = Field(..., description="Input features")
+    classes: list[str] = Field(..., description="Target classes")
+    features: list[str] = Field(..., description="Input features")
     created: str = Field(..., description="Model creation timestamp")
 
     model_config = {

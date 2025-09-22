@@ -1,13 +1,17 @@
 """Data loading utilities for the penguins dataset."""
 
 from pathlib import Path
-from typing import Optional, Tuple
 
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
-from .schema import (ALL_FEATURES, CATEGORICAL_FEATURES, NUMERIC_FEATURES,
-                     TARGET, validate_dataframe_schema)
+from .schema import (
+    ALL_FEATURES,
+    CATEGORICAL_FEATURES,
+    NUMERIC_FEATURES,
+    TARGET,
+    validate_dataframe_schema,
+)
 
 
 class PenguinDataLoader:
@@ -20,28 +24,37 @@ class PenguinDataLoader:
             data_path: Path to the raw penguins CSV file
         """
         self.data_path = Path(data_path)
-        self._raw_data: Optional[pd.DataFrame] = None
-        self._clean_data: Optional[pd.DataFrame] = None
+        self._raw_data: pd.DataFrame | None = None
+        self._clean_data: pd.DataFrame | None = None
 
     def load_raw_data(self) -> pd.DataFrame:
         """Load raw data from CSV file."""
+        from loguru import logger
+        
         if not self.data_path.exists():
+            logger.error(f"Data file not found: {self.data_path}")
             raise FileNotFoundError(f"Data file not found: {self.data_path}")
 
         if self._raw_data is None:
+            logger.info(f"Loading raw data from: {self.data_path}")
             self._raw_data = pd.read_csv(self.data_path)
+            logger.info(f"Loaded {len(self._raw_data)} rows with {len(self._raw_data.columns)} columns")
 
         return self._raw_data.copy()
 
     def load_clean_data(self) -> pd.DataFrame:
         """Load and clean the data according to schema."""
+        from loguru import logger
+        
         if self._clean_data is None:
+            logger.info("Cleaning and validating data schema")
             raw_data = self.load_raw_data()
             self._clean_data = validate_dataframe_schema(raw_data)
+            logger.info(f"Data cleaned: {len(self._clean_data)} rows remaining")
 
         return self._clean_data.copy()
 
-    def get_features_and_target(self) -> Tuple[pd.DataFrame, pd.Series]:
+    def get_features_and_target(self) -> tuple[pd.DataFrame, pd.Series]:
         """Get features (X) and target (y) from clean data.
 
         Returns:
@@ -59,7 +72,7 @@ class PenguinDataLoader:
 
     def train_test_split(
         self, test_size: float = 0.2, random_state: int = 42, stratify: bool = True
-    ) -> Tuple[pd.DataFrame, pd.DataFrame, pd.Series, pd.Series]:
+    ) -> tuple[pd.DataFrame, pd.DataFrame, pd.Series, pd.Series]:
         """Split data into train and test sets.
 
         Args:
@@ -70,26 +83,31 @@ class PenguinDataLoader:
         Returns:
             Tuple of (X_train, X_test, y_train, y_test)
         """
+        from loguru import logger
+        
         X, y = self.get_features_and_target()
+        logger.info(f"Splitting data: {len(X)} samples, test_size={test_size}, stratify={stratify}")
 
         # Only stratify if we have enough samples per class
         stratify_param = y if stratify else None
         if stratify:
             class_counts = y.value_counts()
             min_class_count = class_counts.min()
+            logger.info(f"Class distribution: {class_counts.to_dict()}")
             if min_class_count < 2:
-                print(
-                    f"Warning: Minimum class count is {min_class_count}, disabling stratification"
-                )
+                logger.warning(f"Minimum class count is {min_class_count}, disabling stratification")
                 stratify_param = None
 
-        return train_test_split(
+        X_train, X_test, y_train, y_test = train_test_split(
             X,
             y,
             test_size=test_size,
             random_state=random_state,
             stratify=stratify_param,
         )
+        
+        logger.info(f"Split completed: train={len(X_train)}, test={len(X_test)}")
+        return X_train, X_test, y_train, y_test
 
     def get_data_info(self) -> dict:
         """Get information about the loaded data."""
@@ -138,8 +156,8 @@ def load_penguins_data(
     random_state: int = 42,
     stratify: bool = True,
 ) -> (
-    Tuple[pd.DataFrame, pd.Series]
-    | Tuple[pd.DataFrame, pd.DataFrame, pd.Series, pd.Series]
+    tuple[pd.DataFrame, pd.Series]
+    | tuple[pd.DataFrame, pd.DataFrame, pd.Series, pd.Series]
 ):
     """Convenience function to load penguins data.
 

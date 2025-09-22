@@ -5,8 +5,12 @@ import pytest
 from sklearn.compose import ColumnTransformer
 
 from src.data.schema import CATEGORICAL_FEATURES, NUMERIC_FEATURES
-from src.features.preprocess import (PenguinPreprocessor, create_preprocessor,
-                                     get_preprocessing_info, preprocess_data)
+from src.features.preprocess import (
+    PenguinPreprocessor,
+    create_preprocessor,
+    get_preprocessing_info,
+    preprocess_data,
+)
 
 
 class TestPenguinPreprocessor:

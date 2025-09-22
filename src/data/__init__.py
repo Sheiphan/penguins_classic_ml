@@ -1,9 +1,16 @@
 """Data loading and schema validation utilities."""
 
 from .dataset import PenguinDataLoader, get_sample_data, load_penguins_data
-from .schema import (ALL_FEATURES, CATEGORICAL_FEATURES, NUMERIC_FEATURES,
-                     TARGET, PenguinDataset, PenguinRecord, get_feature_info,
-                     validate_dataframe_schema)
+from .schema import (
+    ALL_FEATURES,
+    CATEGORICAL_FEATURES,
+    NUMERIC_FEATURES,
+    TARGET,
+    PenguinDataset,
+    PenguinRecord,
+    get_feature_info,
+    validate_dataframe_schema,
+)
 
 __all__ = [
     "PenguinDataLoader",

@@ -3,7 +3,6 @@
 import json
 import sys
 from pathlib import Path
-from typing import Optional
 
 import click
 from loguru import logger
@@ -68,7 +67,7 @@ def cli(verbose: bool, quiet: bool) -> None:
     type=click.Path(),
 )
 @click.option("--no-save", is_flag=True, help="Don't save the trained model")
-def train(config: str, output: Optional[str], no_save: bool) -> None:
+def train(config: str, output: str | None, no_save: bool) -> None:
     """Train a machine learning model.
 
     This command trains a model using the specified configuration file.
@@ -155,7 +154,7 @@ def train(config: str, output: Optional[str], no_save: bool) -> None:
     type=click.Path(),
 )
 @click.option("--no-save", is_flag=True, help="Don't save the best model")
-def tune(config: str, output: Optional[str], no_save: bool) -> None:
+def tune(config: str, output: str | None, no_save: bool) -> None:
     """Perform hyperparameter tuning.
 
     This command performs grid search hyperparameter tuning using the
@@ -258,10 +257,10 @@ def tune(config: str, output: Optional[str], no_save: bool) -> None:
 @click.option("--workers", default=None, type=int, help="Number of worker processes")
 def serve(
     config: str,
-    host: Optional[str],
-    port: Optional[int],
+    host: str | None,
+    port: int | None,
     reload: bool,
-    workers: Optional[int],
+    workers: int | None,
 ) -> None:
     """Start the API server.
 

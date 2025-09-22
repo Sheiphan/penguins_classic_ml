@@ -5,8 +5,7 @@ from unittest.mock import MagicMock, patch
 import pandas as pd
 import pytest
 
-from src.data.dataset import (PenguinDataLoader, get_sample_data,
-                              load_penguins_data)
+from src.data.dataset import PenguinDataLoader, get_sample_data, load_penguins_data
 from src.data.schema import ALL_FEATURES, TARGET
 
 

@@ -1,0 +1,110 @@
+services:
+  # Training service
+  train:
+    build:
+      context: .
+      dockerfile: Dockerfile.train
+    container_name: ml-classifier-train
+    volumes:
+      # Mount data directory for input/output
+      - ./data:/app/data
+      - ./models:/app/models
+      - ./results:/app/results
+      - ./logs:/app/logs
+      # Mount configs for easy modification
+      - ./configs:/app/configs
+    environment:
+      # Environment variables for training
+      - PYTHONPATH=/app
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - EXPERIMENT_CONFIG=${EXPERIMENT_CONFIG:-configs/experiment_default.yaml}
+    profiles:
+      - train
+    command: ["uv", "run", "python", "-m", "src.cli", "train", "--config", "${EXPERIMENT_CONFIG:-configs/experiment_default.yaml}"]
+
+  # Hyperparameter tuning service
+  tune:
+    build:
+      context: .
+      dockerfile: Dockerfile.train
+    container_name: ml-classifier-tune
+    volumes:
+      - ./data:/app/data
+      - ./models:/app/models
+      - ./results:/app/results
+      - ./logs:/app/logs
+      - ./configs:/app/configs
+    environment:
+      - PYTHONPATH=/app
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - EXPERIMENT_CONFIG=${EXPERIMENT_CONFIG:-configs/experiment_default.yaml}
+    profiles:
+      - tune
+    command: ["uv", "run", "python", "-m", "src.cli", "tune", "--config", "${EXPERIMENT_CONFIG:-configs/experiment_default.yaml}"]
+
+  # API serving service
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.app
+    container_name: ml-classifier-api
+    ports:
+      - "${API_PORT:-8000}:8000"
+    volumes:
+      # Mount models directory (read-only for serving)
+      - ./models:/app/models:ro
+      - ./logs:/app/logs
+      # Mount configs for serving configuration
+      - ./configs:/app/configs:ro
+    environment:
+      - PYTHONPATH=/app
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - SERVING_CONFIG=${SERVING_CONFIG:-configs/serving.yaml}
+      - API_HOST=${API_HOST:-0.0.0.0}
+      - API_PORT=${API_PORT:-8000}
+      - API_WORKERS=${API_WORKERS:-1}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    profiles:
+      - api
+      - full
+
+  # Development service with hot reload
+  api-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.app
+    container_name: ml-classifier-api-dev
+    ports:
+      - "${API_PORT:-8000}:8000"
+    volumes:
+      # Mount source code for hot reload
+      - ./src:/app/src
+      - ./configs:/app/configs
+      - ./models:/app/models:ro
+      - ./logs:/app/logs
+    environment:
+      - PYTHONPATH=/app
+      - LOG_LEVEL=${LOG_LEVEL:-DEBUG}
+      - SERVING_CONFIG=${SERVING_CONFIG:-configs/serving.yaml}
+      - API_HOST=${API_HOST:-0.0.0.0}
+      - API_PORT=${API_PORT:-8000}
+    command: ["uv", "run", "python", "-m", "src.cli", "serve", "--reload"]
+    profiles:
+      - dev
+
+networks:
+  default:
+    name: ml-classifier-network
+
+volumes:
+  # Named volumes for persistent data
+  model_data:
+    driver: local
+  log_data:
+    driver: local

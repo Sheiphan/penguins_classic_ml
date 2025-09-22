@@ -3,21 +3,124 @@ name = "classic-ml"
 version = "0.1.0"
 requires-python = ">=3.11"
 dependencies = [
-    "black>=25.9.0",
     "click>=8.0.0",
     "fastapi>=0.117.1",
     "httpx>=0.25.0",
-    "isort>=6.0.1",
     "joblib>=1.5.2",
     "loguru>=0.7.0",
     "numpy>=2.3.3",
     "pandas>=2.3.2",
     "pydantic>=2.11.9",
     "pydantic-settings>=2.0.0",
-    "pytest>=8.4.2",
-    "pytest-cov>=4.0.0",
     "pyyaml>=6.0.2",
-    "ruff>=0.13.1",
     "scikit-learn>=1.7.2",
     "uvicorn>=0.36.0",
+]
+
+[dependency-groups]
+dev = [
+    # testing
+    "pytest>=8.4.2",
+    "pytest-cov>=4.0.0",
+    "pytest-asyncio>=0.21.0",
+
+    # formatting / linting
+    "black>=25.9.0",
+    "isort>=6.0.1",
+    "ruff>=0.13.1",
+    "mypy>=1.0.0",
+
+    # security
+    "bandit>=1.7.0",
+    "safety>=2.3.0,<3.0.0",
+
+    # git hooks
+    "pre-commit>=4.3.0",
+]
+
+[tool.black]
+line-length = 88
+target-version = ['py311']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+line_length = 88
+known_first_party = ["src"]
+skip_glob = ["*/__pycache__/*", "*/.*"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
+]
+
+[tool.ruff.lint]
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "B",  # flake8-bugbear
+    "C4", # flake8-comprehensions
+    "UP", # pyupgrade
+]
+ignore = [
+    "E501",  # line too long, handled by black
+    "B008",  # do not perform function calls in argument defaults
+    "C901",  # too complex
+]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 10
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "--strict-markers",
+    "--strict-config",
+    "--cov=src",
+    "--cov-report=term-missing",
+    "--cov-report=html:htmlcov",
+    "--cov-fail-under=80",
+]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests as integration tests",
 ]

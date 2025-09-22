@@ -5,6 +5,7 @@ This directory contains comprehensive documentation for the Enterprise ML Classi
 ## Documentation Files
 
 - **[CLI_USAGE.md](CLI_USAGE.md)** - Complete guide to using the command-line interface
+- **[DOCKER.md](DOCKER.md)** - Docker deployment and containerization guide
 - **[API_REFERENCE.md](API_REFERENCE.md)** - FastAPI endpoints and usage (coming soon)
 - **[CONFIGURATION.md](CONFIGURATION.md)** - Configuration file reference (coming soon)
 - **[DEVELOPMENT.md](DEVELOPMENT.md)** - Development setup and contribution guide (coming soon)
@@ -15,6 +16,7 @@ This directory contains comprehensive documentation for the Enterprise ML Classi
 1. [Setup Development Environment](CLI_USAGE.md#setup--installation)
 2. [Train Your First Model](CLI_USAGE.md#train---train-a-machine-learning-model)
 3. [Start the API Server](CLI_USAGE.md#serve---start-api-server)
+4. [Docker Deployment](DOCKER.md#quick-start)
 
 ### Common Tasks
 - [Training Models](CLI_USAGE.md#training-commands)
@@ -25,6 +27,8 @@ This directory contains comprehensive documentation for the Enterprise ML Classi
 ### Advanced Usage
 - [Configuration Files](CLI_USAGE.md#configuration-files)
 - [Developer Scripts](CLI_USAGE.md#developer-scripts)
+- [Docker Containers](DOCKER.md#container-images)
+- [Production Deployment](DOCKER.md#production-deployment)
 - [Integration Testing](CLI_USAGE.md#integration-with-other-tools)
 
 ## Project Structure

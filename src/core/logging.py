@@ -2,14 +2,13 @@
 
 import sys
 from pathlib import Path
-from typing import Optional
 
 from loguru import logger
 
 from .config import LoggingConfig
 
 
-def setup_logging(config: Optional[LoggingConfig] = None) -> None:
+def setup_logging(config: LoggingConfig | None = None) -> None:
     """
     Set up logging configuration using Loguru.
 
@@ -64,7 +63,7 @@ def get_logger(name: str):
 
 
 # Convenience function for quick setup
-def setup_default_logging(level: str = "INFO", log_file: Optional[str] = None):
+def setup_default_logging(level: str = "INFO", log_file: str | None = None):
     """
     Quick setup for default logging configuration.
 
