@@ -25,8 +25,6 @@ dev = [
     "pytest-asyncio>=0.21.0",
 
     # formatting / linting
-    "black>=25.9.0",
-    "isort>=6.0.1",
     "ruff>=0.13.1",
     "mypy>=1.0.0",
 
@@ -37,31 +35,6 @@ dev = [
     # git hooks
     "pre-commit>=4.3.0",
 ]
-
-[tool.black]
-line-length = 88
-target-version = ['py311']
-include = '\.pyi?$'
-extend-exclude = '''
-/(
-  # directories
-  \.eggs
-  | \.git
-  | \.hg
-  | \.mypy_cache
-  | \.tox
-  | \.venv
-  | build
-  | dist
-)/
-'''
-
-[tool.isort]
-profile = "black"
-multi_line_output = 3
-line_length = 88
-known_first_party = ["src"]
-skip_glob = ["*/__pycache__/*", "*/.*"]
 
 [tool.ruff]
 line-length = 88
@@ -106,6 +79,12 @@ ignore = [
 
 [tool.ruff.lint.mccabe]
 max-complexity = 10
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
