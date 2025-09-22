@@ -4,20 +4,20 @@ from typing import List, Optional
 
 from pydantic import BaseModel, Field
 
-from ..data.schema import VALID_ISLANDS, VALID_SEXES, VALID_SPECIES
-
 
 class PredictRequest(BaseModel):
     """Request schema for penguin species prediction."""
-    
+
     island: str = Field(..., description="Island where penguin was observed")
     bill_length_mm: float = Field(..., ge=0, description="Bill length in millimeters")
     bill_depth_mm: float = Field(..., ge=0, description="Bill depth in millimeters")
-    flipper_length_mm: float = Field(..., ge=0, description="Flipper length in millimeters")
+    flipper_length_mm: float = Field(
+        ..., ge=0, description="Flipper length in millimeters"
+    )
     body_mass_g: float = Field(..., ge=0, description="Body mass in grams")
     sex: str = Field(..., description="Sex of the penguin")
     year: int = Field(..., ge=2007, le=2009, description="Year of observation")
-    
+
     model_config = {
         "json_schema_extra": {
             "example": {
@@ -27,7 +27,7 @@ class PredictRequest(BaseModel):
                 "flipper_length_mm": 181.0,
                 "body_mass_g": 3750.0,
                 "sex": "MALE",
-                "year": 2007
+                "year": 2007,
             }
         }
     }
@@ -35,21 +35,19 @@ class PredictRequest(BaseModel):
 
 class PredictResponse(BaseModel):
     """Response schema for penguin species prediction."""
-    
+
     prediction: str = Field(..., description="Predicted penguin species")
-    confidence: Optional[float] = Field(None, ge=0, le=1, description="Prediction confidence score")
+    confidence: Optional[float] = Field(
+        None, ge=0, le=1, description="Prediction confidence score"
+    )
     probabilities: Optional[dict] = Field(None, description="Class probabilities")
-    
+
     model_config = {
         "json_schema_extra": {
             "example": {
                 "prediction": "Adelie",
                 "confidence": 0.95,
-                "probabilities": {
-                    "Adelie": 0.95,
-                    "Chinstrap": 0.03,
-                    "Gentoo": 0.02
-                }
+                "probabilities": {"Adelie": 0.95, "Chinstrap": 0.03, "Gentoo": 0.02},
             }
         }
     }
@@ -57,9 +55,11 @@ class PredictResponse(BaseModel):
 
 class BatchPredictRequest(BaseModel):
     """Request schema for batch penguin species prediction."""
-    
-    instances: List[PredictRequest] = Field(..., description="List of penguin instances to predict")
-    
+
+    instances: List[PredictRequest] = Field(
+        ..., description="List of penguin instances to predict"
+    )
+
     model_config = {
         "json_schema_extra": {
             "example": {
@@ -71,7 +71,7 @@ class BatchPredictRequest(BaseModel):
                         "flipper_length_mm": 181.0,
                         "body_mass_g": 3750.0,
                         "sex": "MALE",
-                        "year": 2007
+                        "year": 2007,
                     }
                 ]
             }
@@ -81,9 +81,9 @@ class BatchPredictRequest(BaseModel):
 
 class BatchPredictResponse(BaseModel):
     """Response schema for batch penguin species prediction."""
-    
+
     predictions: List[PredictResponse] = Field(..., description="List of predictions")
-    
+
     model_config = {
         "json_schema_extra": {
             "example": {
@@ -94,8 +94,8 @@ class BatchPredictResponse(BaseModel):
                         "probabilities": {
                             "Adelie": 0.95,
                             "Chinstrap": 0.03,
-                            "Gentoo": 0.02
-                        }
+                            "Gentoo": 0.02,
+                        },
                     }
                 ]
             }
@@ -105,12 +105,14 @@ class BatchPredictResponse(BaseModel):
 
 class HealthResponse(BaseModel):
     """Response schema for health check endpoint."""
-    
+
     status: str = Field(..., description="Service health status")
     model_loaded: bool = Field(..., description="Whether model is loaded successfully")
-    model_info: Optional[dict] = Field(None, description="Information about loaded model")
+    model_info: Optional[dict] = Field(
+        None, description="Information about loaded model"
+    )
     timestamp: str = Field(..., description="Health check timestamp")
-    
+
     model_config = {
         "json_schema_extra": {
             "example": {
@@ -119,9 +121,9 @@ class HealthResponse(BaseModel):
                 "model_info": {
                     "model_id": "penguin_classifier_v1",
                     "model_type": "Pipeline",
-                    "classes": ["Adelie", "Chinstrap", "Gentoo"]
+                    "classes": ["Adelie", "Chinstrap", "Gentoo"],
                 },
-                "timestamp": "2024-01-15T10:30:00Z"
+                "timestamp": "2024-01-15T10:30:00Z",
             }
         }
     }
@@ -129,11 +131,11 @@ class HealthResponse(BaseModel):
 
 class ErrorResponse(BaseModel):
     """Response schema for API errors."""
-    
+
     error: str = Field(..., description="Error type")
     message: str = Field(..., description="Error message")
     details: Optional[dict] = Field(None, description="Additional error details")
-    
+
     model_config = {
         "json_schema_extra": {
             "example": {
@@ -141,8 +143,8 @@ class ErrorResponse(BaseModel):
                 "message": "Invalid input data",
                 "details": {
                     "field": "bill_length_mm",
-                    "issue": "must be greater than 0"
-                }
+                    "issue": "must be greater than 0",
+                },
             }
         }
     }
@@ -150,21 +152,29 @@ class ErrorResponse(BaseModel):
 
 class ModelInfoResponse(BaseModel):
     """Response schema for model information endpoint."""
-    
+
     model_id: str = Field(..., description="Model identifier")
     model_type: str = Field(..., description="Type of model")
     classes: List[str] = Field(..., description="Target classes")
     features: List[str] = Field(..., description="Input features")
     created: str = Field(..., description="Model creation timestamp")
-    
+
     model_config = {
         "json_schema_extra": {
             "example": {
                 "model_id": "penguin_classifier_v1",
                 "model_type": "Pipeline",
                 "classes": ["Adelie", "Chinstrap", "Gentoo"],
-                "features": ["island", "bill_length_mm", "bill_depth_mm", "flipper_length_mm", "body_mass_g", "sex", "year"],
-                "created": "2024-01-15T09:00:00Z"
+                "features": [
+                    "island",
+                    "bill_length_mm",
+                    "bill_depth_mm",
+                    "flipper_length_mm",
+                    "body_mass_g",
+                    "sex",
+                    "year",
+                ],
+                "created": "2024-01-15T09:00:00Z",
             }
         }
     }
