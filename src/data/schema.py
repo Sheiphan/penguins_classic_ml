@@ -3,6 +3,7 @@
 import pandas as pd
 from pydantic import BaseModel, Field, field_validator
 
+
 # Feature definitions based on penguins_lter.csv dataset
 NUMERIC_FEATURES = [
     "bill_length_mm",

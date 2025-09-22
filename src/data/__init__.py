@@ -12,6 +12,7 @@ from .schema import (
     validate_dataframe_schema,
 )
 
+
 __all__ = [
     "PenguinDataLoader",
     "load_penguins_data",
