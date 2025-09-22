@@ -97,7 +97,7 @@ if [ -f ".env.example" ]; then
         "EXPERIMENT_CONFIG"
         "SERVING_CONFIG"
     )
-    
+
     for var in "${required_vars[@]}"; do
         if grep -q "^$var=" .env.example; then
             print_status "✓ $var defined in .env.example"

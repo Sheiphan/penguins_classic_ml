@@ -65,7 +65,7 @@ curl -X POST "http://localhost:8000/predict" \
 The system uses the Palmer Penguins dataset, which includes measurements for three penguin species:
 
 - **Adelie** (Pygoscelis adeliae)
-- **Chinstrap** (Pygoscelis antarcticus) 
+- **Chinstrap** (Pygoscelis antarcticus)
 - **Gentoo** (Pygoscelis papua)
 
 ### Features
@@ -190,7 +190,7 @@ docker-compose up --build
 # Build training image
 docker build -f Dockerfile.train -t ml-classifier:train .
 
-# Build serving image  
+# Build serving image
 docker build -f Dockerfile.app -t ml-classifier:serve .
 
 # Run training
@@ -337,7 +337,7 @@ pre-commit install
 The project enforces code quality through:
 
 - **Black**: Code formatting
-- **isort**: Import sorting  
+- **isort**: Import sorting
 - **Ruff**: Fast Python linter
 - **pytest**: Testing framework
 - **pre-commit**: Git hooks for quality checks

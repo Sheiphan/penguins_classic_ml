@@ -362,13 +362,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Build images
         run: make docker-build
-        
+
       - name: Test containers
         run: make docker-test
-        
+
       - name: Push to registry
         if: github.ref == 'refs/heads/main'
         run: |

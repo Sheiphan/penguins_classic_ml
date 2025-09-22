@@ -121,20 +121,20 @@ fi
 # Test 7: Test health check endpoint (if model exists)
 if [ -d "models/artifacts" ] && [ "$(ls -A models/artifacts)" ]; then
     print_status "Testing API health check with existing model..."
-    
+
     # Start container in background
     CONTAINER_ID=$(docker run -d -p 8001:8000 -v "$(pwd)/models:/app/models:ro" ml-classifier-app:test)
-    
+
     # Wait for container to start
     sleep 10
-    
+
     # Test health endpoint
     if curl -f http://localhost:8001/health > /dev/null 2>&1; then
         print_status "✓ Health check endpoint works"
     else
         print_warning "⚠ Health check endpoint not responding (this may be expected if no model is trained)"
     fi
-    
+
     # Clean up
     docker stop $CONTAINER_ID > /dev/null 2>&1
     docker rm $CONTAINER_ID > /dev/null 2>&1

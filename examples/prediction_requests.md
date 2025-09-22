@@ -128,7 +128,7 @@ curl -X POST "http://localhost:8000/predict/batch" \
       "input_index": 0
     },
     {
-      "prediction": "Chinstrap", 
+      "prediction": "Chinstrap",
       "confidence": 0.88,
       "input_index": 1
     },
@@ -251,7 +251,7 @@ curl http://localhost:8000/model/info
   "features": [
     "island",
     "bill_length_mm",
-    "bill_depth_mm", 
+    "bill_depth_mm",
     "flipper_length_mm",
     "body_mass_g",
     "sex",
@@ -308,7 +308,7 @@ async def predict_species():
             "sex": "FEMALE",
             "year": 2008
         }
-        
+
         response = await client.post(
             "http://localhost:8000/predict",
             json=data
@@ -326,7 +326,7 @@ print(result)
 ### Feature Constraints
 - **island**: Must be one of ["Biscoe", "Dream", "Torgersen"]
 - **bill_length_mm**: Positive float, typically 30-60mm
-- **bill_depth_mm**: Positive float, typically 13-22mm  
+- **bill_depth_mm**: Positive float, typically 13-22mm
 - **flipper_length_mm**: Positive float, typically 170-235mm
 - **body_mass_g**: Positive float, typically 2700-6300g
 - **sex**: Must be one of ["MALE", "FEMALE"]

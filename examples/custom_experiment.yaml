@@ -23,15 +23,15 @@ features:
     - "flipper_length_mm"
     - "body_mass_g"
     - "year"
-  
+
   # Categorical features to include in the model
   categorical_features:
     - "island"
     - "sex"
-  
+
   # Target variable for classification
   target: "species"
-  
+
   # Train/test split configuration
   test_size: 0.2
   stratify: true
@@ -44,7 +44,7 @@ model:
   # - DecisionTreeClassifier
   # - SVC
   name: "RandomForestClassifier"
-  
+
   # Model hyperparameters
   params:
     n_estimators: 100
@@ -53,7 +53,7 @@ model:
     min_samples_leaf: 1
     random_state: 42
     n_jobs: -1
-  
+
   # Hyperparameter tuning configuration (optional)
   tune:
     # Parameter grid for grid search
@@ -62,13 +62,12 @@ model:
         max_depth: [5, 10, 15, null]
         min_samples_split: [2, 5, 10]
         min_samples_leaf: [1, 2, 4]
-    
+
     # Cross-validation settings
     cv: 5
     scoring: "f1_macro"
     n_jobs: -1
 
----
 # Alternative configuration examples
 
 # Example 1: Logistic Regression with tuning

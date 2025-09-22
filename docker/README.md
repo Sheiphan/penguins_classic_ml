@@ -82,7 +82,7 @@ The `docker-compose.yaml` file uses profiles to organize different deployment sc
 ### Available Profiles
 
 - **`train`**: Training workloads only
-- **`tune`**: Hyperparameter tuning only  
+- **`tune`**: Hyperparameter tuning only
 - **`api`**: Production API serving
 - **`dev`**: Development API with hot reload
 - **`full`**: Complete stack (train + serve)

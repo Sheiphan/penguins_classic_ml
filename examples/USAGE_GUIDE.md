@@ -127,7 +127,7 @@ model:
     max_depth: 15
     min_samples_split: 5
     random_state: 42
-  
+
   tune:
     grid:
       - n_estimators: [100, 200, 300]
@@ -633,11 +633,11 @@ def create_custom_preprocessor():
     numeric_transformer = Pipeline([
         ('scaler', StandardScaler())
     ])
-    
+
     categorical_transformer = Pipeline([
         ('onehot', OneHotEncoder(handle_unknown='ignore'))
     ])
-    
+
     return ColumnTransformer([
         ('num', numeric_transformer, numeric_features),
         ('cat', categorical_transformer, categorical_features)
@@ -696,7 +696,7 @@ def log_prediction(input_data, prediction, confidence):
         "prediction": prediction,
         "confidence": confidence
     }
-    
+
     log_file = Path("logs/predictions.jsonl")
     with open(log_file, "a") as f:
         f.write(json.dumps(log_entry) + "\n")
